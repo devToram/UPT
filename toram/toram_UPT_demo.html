@@ -1,34 +1,101 @@
+<!DOCTYPE html>
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <!-- Load TensorFlow.js -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-  <!-- Load Posenet -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+    <title>PoseNet - Camera Feed Demo</title>
+    <style>
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: black;
+        }
+
+        .footer-text {
+            max-width: 680px;
+            text-align: center;
+            margin: auto;
+        }
+
+        @media only screen and (max-width: 600px) {
+
+            .footer-text,
+            .dg {
+                display: none;
+            }
+        }
+
+        /*
+         *  The following loading spinner CSS is from SpinKit project
+         *  https://github.com/tobiasahlin/SpinKit
+         */
+        .sk-spinner-pulse {
+            width: 20px;
+            height: 20px;
+            margin: auto 10px;
+            float: left;
+            background-color: #333;
+            border-radius: 100%;
+            -webkit-animation: sk-pulseScaleOut 1s infinite ease-in-out;
+            animation: sk-pulseScaleOut 1s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes sk-pulseScaleOut {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sk-pulseScaleOut {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        .spinner-text {
+            float: left;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-  <img id='cat' src='data:image/jpeg;base64,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' crossorigin='anonymous' />
+    <div id="info" style='display:none'>
+    </div>
+    <div id="loading" style='display:flex'>
+        <div class="spinner-text">
+            Loading PoseNet model...
+        </div>
+        <div class="sk-spinner sk-spinner-pulse"></div>
+    </div>
+    <div id='main' style='display:none'>
+        <video id="video" playsinline style="display: none;">
+        </video>
+        <canvas id="output" />
+    </div>
+    <div class="footer">
+        <div class="footer-text">
+            <p>
+                <h1>UPT (Your Personal Trainer)</h1>
+                <h2>비싼 PT를 내 집에서! 최고의 인기 유튜버의 자세를 분석하여,사용자의 자세에서 고쳐야 할 점을 알려줍니다!</h2>
+        </div>
+    </div>
+    <script src="UPT_test.js"></script>
 </body>
-<!-- Place your code in the script tag below. You can also use an external .js file -->
-<script>
-  var flipHorizontal = false;
-
-  var imageElement = document.getElementById('cat');
-
-  posenet.load().then(function (net) {
-    const pose = net.estimateSinglePose(imageElement, {
-      flipHorizontal: true
-    });
-    return pose;
-  }).then(function (pose) {
-    console.log(pose);
-    for(step=0; step<17;step++)
-    {document.write(pose['keypoints'][step]['part']," score : ",pose['keypoints'][step]['score'], "<br>");
-    document.write(pose['keypoints'][step]['part']," position : (",pose['keypoints'][step]['position']['x'],",",pose['keypoints'][step]['position']['y'], ")<br><br>");
-    }
-  })
-</script>
 
 </html>

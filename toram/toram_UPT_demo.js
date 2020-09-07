@@ -40986,8 +40986,6 @@ function toTuple({
 }
 
 function drawPoint(ctx, y, x, r, color) {
-    // jihyeon
-    console.log(x, y)
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 2 * Math.PI);
   ctx.fillStyle = color;
@@ -41025,7 +41023,8 @@ function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
 function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
-
+    // toram finally found! it is the points that points the body parts!!
+    console.log('순서대로',i,' ',keypoint);
     if (keypoint.score < minConfidence) {
       continue;
     }
@@ -41257,9 +41256,9 @@ function setupGui(cameras, net) {
   if (cameras.length > 0) {
     guiState.camera = cameras[0].deviceId;
   }
-
+/* // toram hidden GUI end
   const gui = new _dat.default.GUI({
-    width: 300
+    width: 0
   });
   let architectureController = null;
 
@@ -41412,6 +41411,11 @@ function setupGui(cameras, net) {
     }
   });
 }
+*/ 
+}
+// toram hidden GUI end
+
+
 /**
  * Sets up a frames per second panel on the top-left of the window
  */

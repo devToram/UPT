@@ -1,0 +1,4 @@
+nose,leftEye,rightEye,leftEar,rightEar,leftShoulder,rightShoulder,leftElbow,rightElbow,leftWrist,rightWrist,leftHip,rightHip,leftKnee,rightKnee,leftAnkle,rightAnkle
+0.000,0.042,0.008,0.181,0.196,0.719,0.957,0.857,0.857,5.216,5.144,2.352,2.243,2.540,2.545,1.067,1.000
+0.000,0.017,0.041,0.050,0.069,0.105,0.098,0.682,0.653,0.657,0.703,0.271,0.313,0.249,0.373,1.005,1.000
+0.837,0.902,0.378,0.971,0.235,0.967,0.857,0.827,0.467,0.671,0.583,0.120,0.138,0.500,0.353,0.232,0.291

@@ -1,0 +1,124 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- Load TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <!-- Load Posenet -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/posenet"></script>
+</head>
+
+<body>
+  <img id='cat' src='./data_labelling/image_square/output_images/1 (1).png' crossorigin='anonymous' />
+</body>
+<!-- Place your code in the script tag below. You can also use an external .js file -->
+<script>
+
+
+  function exportToCsv(filename, rows) {
+    var processRow = function (row) {
+      var finalVal = '';
+      for (var j = 0; j < row.length; j++) {
+        var innerValue = row[j] === null ? '' : row[j].toString();
+        if (row[j] instanceof Date) {
+          innerValue = row[j].toLocaleString();
+        };
+        var result = innerValue.replace(/"/g, '""');
+        if (result.search(/("|,|\n)/g) >= 0)
+          result = '"' + result + '"';
+        if (j > 0)
+          finalVal += ',';
+        finalVal += result;
+      }
+      return finalVal + '\n';
+    };
+
+    var csvFile = '';
+    for (var i = 0; i < rows.length; i++) {
+      csvFile += processRow(rows[i]);
+    }
+
+    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, filename);
+    } else {
+      var link = document.createElement("a");
+      if (link.download !== undefined) { // feature detection
+        // Browsers that support HTML5 download attribute
+        var url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  }
+
+  var photo = 1;
+
+  while (photo < 5) {
+    document.getElementById('cat').src = './data_labelling/image_square/output_images/1 (' + String(photo) + ').png'
+    var flipHorizontal = false;
+    var imageElement = document.getElementById('cat');
+    // var dictObject = {};
+
+    posenet.load().then(function (net) {
+      const pose = net.estimateSinglePose(imageElement, {
+        flipHorizontal: true
+      });
+      return pose;
+    }).then(function (pose) {
+
+      var scoreArray = new Array();
+      var xposArray = new Array();
+      var yposArray = new Array();
+      var partArray = new Array();
+
+      for (step = 0; step < 17; step++) {
+        scoreArray.push(pose['keypoints'][step]['score'].toFixed(3));
+        xposArray.push(pose['keypoints'][step]['position']['x'].toFixed(3));
+        yposArray.push(pose['ypos'] = pose['keypoints'][step]['position']['y'].toFixed(3));
+        partArray.push(pose['part'] = pose['keypoints'][step]['part']);
+      }
+
+      var noseX = xposArray[0];
+      var noseY = yposArray[0];
+
+      for (i = 0; i < 17; i++) {
+        xposArray[i] = Math.abs(xposArray[i] - noseX);
+        yposArray[i] = Math.abs(yposArray[i] - noseY);
+      }
+
+      var ankleX = xposArray[16];
+      var ankleY = yposArray[16];
+
+      for (i = 0; i < 17; i++) {
+        xposArray[i] = (xposArray[i] / ankleX).toFixed(3);
+        yposArray[i] = (yposArray[i] / ankleY).toFixed(3);
+      }
+
+      // dictObject['part'] = partArray;
+      // dictObject['score'] = scoreArray;
+      // dictObject['xpos'] = xposArray;
+      // dictObject['ypos'] = yposArray;
+      // var myJSON = JSON.stringify(dictObject);
+      // console.log(myJSON);
+      //////////////////////
+
+      exportToCsv('export' + String(photo) + '.csv', [
+        partArray,
+        xposArray,
+        yposArray,
+        scoreArray,
+      ])
+
+      ////////////////////
+    })
+    photo += 1;
+  }
+
+</script>
+
+</html>

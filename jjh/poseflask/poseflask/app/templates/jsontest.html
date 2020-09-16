@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css"/>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type=text/javascript>
+    $(function() {
+        $('.jsonbtn').bind('click',function(event) {
+          $.ajax({
+            type : "POST",
+            url : "/jsontest2",
+            dataType : "json",
+            data : JSON.stringify({"state":"json send"}),
+            contentType : "application/json;charset=UTF-8",
+            success : function(data){
+              console.log(data)
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+    <a href="#" id="Btn"><input type="button" class="jsonbtn" value="Send"></a>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>cv test</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type=text/javascript>
+      $(function() {
+        $('.recordBtn').bind('click',function(event) {
+          $.ajax({
+            type : "POST",
+            url : "video_feed/video_feed",
+            dataType : "json",
+            data : JSON.stringify("REC Start"),
+            contentType : "application/json;charset=UTF-8",
+            success : function(data){
+              
+            }
+          });
+          $('.recordBtn').css('display','none');
+          $('.stopBtn').css('display','block');
+        });
+      });
+      
+      $(function() {
+        $('.stopBtn').bind('click',function(event) {
+          $.ajax({
+            type : "POST",
+            url : "video_feed/rec_stop",
+            dataType : "json",
+            data : JSON.stringify("REC Stop"),
+            contentType : "application/json;charset=UTF-8",
+            success : function(data){
+              
+            }
+          });
+          $('.stopBtn').css('display','none');
+          $('.recordBtn').css('display','block');
+        });
+      });
+
+      $(function() {
+        $('.upload').bind('click',function(event) {
+          $.ajax({
+            type : "POST",
+            url : "video_save/video_save",
+            dataType : "json",
+            data : JSON.stringify("REC Save"),
+            contentType : "application/json;charset=UTF-8",
+            success : function(data){
+              console.log("uploaded");
+            }
+          });
+
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>asdfasdf</h1>
+    <img id="bg" class="center" src="{{ url_for('video_feed.video_feed') }}">
+    <form>
+      <a href="#" id="Btn"><input type="button" class="recordBtn" value="녹화 시작"/></a>
+      <a href="#" id="Btn"><input type="button" class="stopBtn" value="녹화 중지" style="display:none"/></a>
+    </form>
+    <form>
+      <a href="#" id="Btn"><input type="button" class="upload" value="저장하기"></a>
+    </form
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RESULT - UPT</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body onload="myFunction()">
+    <header>
+      <!-- 헤더 -->
+      <nav class="navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">
+              UPT<span>　Your Personal Training</span>
+            </a>
+          </div>
+          <div class="navbar-collapse">
+            <ul class="navbar-right">
+              <li>
+                <a class="nav-link" href="https://github.com/JooEHyeon/UPT">
+                  <img
+                    class="icon"
+                    src="../static/images/github-logo.png"
+                    alt="UPT git hub"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  class="nav-link"
+                  href="https://meet.google.com/der-egzs-cns?hma=1&hmv=1"
+                >
+                  <img
+                    class="icon"
+                    src="../static/images/meet-icon.png"
+                    alt="UPT google meet"
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+        <!-- 로딩 화면 시작 -->
+        <div id="loading-section">
+            <h1 class = "title">결과를 작성중입니다.</h1>
+            <div id="loader"></div>
+        </div>
+        <!-- 로딩 화면 끝 -->
+      <!-- 메인 -->
+      <div class="container">
+          <section class="result-section" id = "myDiv">
+              <div class="row">
+                <div class="col-md-6 text-left col-z-index">
+                    <div class="stop-section">
+                        <h1 class="title">
+                            <strong>'광인사'</strong>님의
+                            <br>운동 결과입니다.
+                        </h1>
+                        <ul class="desc">
+                            <li>반복 3회 완료</li>
+                            <li>허리를 낮추세요.</li>
+                            <li>고개를 숙이세요.</li>
+                            <li>
+                                <!-- <a href="workout.html" class="move-btn">
+                                STOP
+                                </a> -->
+                            </li>
+                        </ul>
+                    </div>                    
+                </div>
+                <div class="col-md-6">
+                    <img src="../static/images/img_desc_1.PNG" alt="사용법 설명 이미지">
+                 </div>
+             </div>
+            </section>
+        </div>
+      </div>
+      <!-- 메인 끝 -->
+    </main>
+    <footer>
+      <!-- 푸터 -->
+      <div class="container">
+        <div class="pull-right">
+          <div class="copyright">
+            © 2020 Team
+            <span>Gloo-Gloo</span>, JH Park, SC Park, KJ Yoon, JH Jeon
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+        var myVar;
+        
+        function myFunction() {
+          myVar = setTimeout(showPage, 3000);
+        }
+        
+        function showPage() {
+          document.getElementById("loading-section").style.display = "none";
+          document.getElementById("myDiv").style.display = "block";
+        }
+        </script>
+  </body>
+</html>

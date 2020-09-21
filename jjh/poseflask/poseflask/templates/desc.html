@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DESC - UPT</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+      const videoWidth = 600;
+      const videoHeight = 500;
+      /**
+      * Loads a the camera to be used in the demo
+      *
+      */
+      async function setupCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error(
+              'Browser API navigator.mediaDevices.getUserMedia not available');
+        }
+
+        const video = document.getElementById('video');
+        video.width = videoWidth;
+        video.height = videoHeight;
+
+        const mobile = isMobile();
+        const stream = await navigator.mediaDevices.getUserMedia({
+          'audio': false,
+          'video': {
+            facingMode: 'user',
+            width: mobile ? undefined : videoWidth,
+            height: mobile ? undefined : videoHeight,
+          },
+        });
+        video.srcObject = stream;
+
+        return new Promise((resolve) => {
+          video.onloadedmetadata = () => {
+            resolve(video);
+          };
+        });
+      }
+
+      async function loadVideo() {
+        const video = await setupCamera();
+        video.play();
+
+        return video;
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <!-- 헤더 -->
+      <nav class="navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="{{url_for('index')}}">
+              UPT<span>　Your Personal Training</span>
+            </a>
+          </div>
+          <div class="navbar-collapse">
+            <ul class="navbar-right">
+              <li>
+                <a class="nav-link" href="https://github.com/JooEHyeon/UPT">
+                  <img
+                    class="icon"
+                    src="../static/images/github-logo.png"
+                    alt="UPT git hub"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  class="nav-link"
+                  href="https://meet.google.com/der-egzs-cns?hma=1&hmv=1"
+                >
+                  <img
+                    class="icon"
+                    src="../static/images/meet-icon.png"
+                    alt="UPT google meet"
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <!-- 메인 -->
+      <div class="container">
+          <section class="desc-section">
+              <div class="row">
+                <div class="col-md-6 text-left col-z-index">
+                    <h1 class="title">사용 방법</h1>
+                    <ul class="desc">
+                        <li>1. 아래 시작하기 버튼을 눌러주세요</li>
+                        <li>2. 화면 안에 있는 세 점에 머리, 어깨, 다리를 맞춰주세요.</li>
+                        <li>3. 화면에 OK사인이 뜨면 운동을 시작해주세요.</li>
+                        <li>4. 운동이 끝나면 종료 버튼을 눌러주세요.</li>
+                        <li>5. 잠시 후 오늘 운동에 대한 결과가 도착합니다. </li>
+                        <li>
+                            <a href="{{url_for('workout')}}" class="move-btn">
+                              START
+                            </a>
+                          </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                   <!-- <img src="../static/images/img_desc_1.PNG" alt="사용법 설명 이미지"> -->
+                  <div id="loading">
+                    <img src="../static/images/img_desc_1.PNG" alt="사용법 설명 이미지">
+                  </div>
+                </div>
+             </div>
+            </section>
+        </div>
+      </div>
+      <!-- 메인 끝 -->
+    </main>
+    <footer>
+      <!-- 푸터 -->
+      <div class="container">
+        <div class="pull-right">
+          <div class="copyright">
+            © 2020 Team
+            <span>Gloo-Gloo</span>, JH Park, SC Park, KJ Yoon, JH Jeon
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

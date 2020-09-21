@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PoseNet - Camera Feed Demo</title>
+
+</head>
+
+<body>
+    <div id="loading">
+        Loading the model...
+    </div>
+
+    <div id='main' style='display:none'>
+        <video id="video" playsinline style=" -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        display: none;
+        ">
+        </video>
+        <canvas id="output" />
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.2/build/dat.gui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="https://unpkg.com/@tensorflow-models/posenet"></script>
+    <!-- <script type="text/javascript" src="{{ url_for('static',filename='js/demo_util.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/stats.min.js') }}"></script>
+    <script type="application/javascript" src="{{ url_for('static',filename='js/camera2.js') }}"></script> -->
+    <script type="text/javascript" src="{{ static_url_for('static',filename='js/demo_util.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url_for('static',filename='js/stats.min.js') }}"></script>
+    <!-- <script src="{{ static_url_for('static',filename='js/camera2.js') }}"></script> -->
+    <script type="text/javascript" src="{{ static_url_for('static',filename='js/dist/bundle.js') }}"></script>
+    <!-- <script src="../static/js/demo_util.js"></script>
+    <script src="../static/js/stats.min.js"></script>
+    <script src="../static/js/camera.js"></script> -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+
+</html>

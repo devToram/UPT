@@ -10,13 +10,13 @@ warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from xgboost import XGBClassifier
 from xgboost import plot_importance
 
-path = r"C:/Users/kyung/Desktop/UPT_dev/all_posnet_data/"
+path = "./all_posnet_data/"
 
 
 # In[2]:

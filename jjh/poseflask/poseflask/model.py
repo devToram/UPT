@@ -17,6 +17,7 @@ class Model():
 
     def make_data(self,df_data):
         # 첫번째 컬럼빼고 다음에 나오는 부위컬럼들 삭제
+        
         drop_idx = []
         for i in range(0, len(df_data)-4, 4):
             drop_idx.append(i+3)
@@ -24,6 +25,7 @@ class Model():
         df_data.drop(df_data.index[drop_idx], inplace = True)
         df_data.reset_index(drop=True, inplace = True)
         
+        df_data = df_data.iloc[:-1,:]
         # 모든 값 str -> float형태로 
         df_data = df_data.apply(pd.to_numeric)
         
@@ -33,6 +35,7 @@ class Model():
             score_idx.append(i+2)
             
         # score점수가 0.5이하면 버리기 -> NaN값으로 처리
+
         columns = df_data.columns.to_list()
         for idx in score_idx:  
             for column in columns:    
@@ -64,7 +67,7 @@ class Model():
         for column in columns:
             x_col.append(column+'_x')
             y_col.append(column+'_y')
-            
+        
         # 컬럼명 바꾸기 
         x_data.columns = x_col
         y_data.columns = y_col

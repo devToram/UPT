@@ -124,27 +124,27 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
-    if(keypoint.position.x == null){
+    if(keypoint.position.x < 0.1){
       keypoint_array.push(0.0)
     }else{
       keypoint_array.push(keypoint.position.x);
     }
     
-    if(keypoint.position.y == null){
+    if(keypoint.position.y < 0.1){
       keypoint_array.push(0.0)
     }else{
       keypoint_array.push(keypoint.position.y);
     }
     
-    if(keypoint.score == null){
+    if(keypoint.score < 0.000001){
       confidence_array.push(0.0)
     }else{
       confidence_array.push(keypoint.score);
     }
 
-    if (keypoint.score < minConfidence) {
-      continue;
-    }
+    // if (keypoint.score < minConfidence) {
+    //   continue;
+    // }
 
     const {y, x} = keypoint.position;
     drawPoint(ctx, y * scale, x * scale, 3, color);
@@ -153,6 +153,9 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
   if (counter < 11){
     final_array.push(semi_final_array);
     counter += 1;
+  }else if(counter > 10){
+    final_array.length = 0;
+    counter = 0;
   }
 }
 
@@ -170,33 +173,28 @@ export function arrToObject(arr){
   return formatted;
 }
 
-export function sendJSON(){
-  fetch(`${window.origin}/report`, {
-    method: "POST",
-    credentials: "include",
-    body: JSON.stringify(arrToObject(final_array)),
-    cache: "no-cache",
-    headers: new Headers({
-      "content-type": "application/json"
-    })
-  })
-  .then(function(response) {
-    if (response.status !== 200) {
-      console.log(`Looks like there was a problem. Status code: ${response.status}`);
-      return;
-    }
-    response.json().then(function(data) {
-      console.log(data);
-      window.location.href = "result";
+export function sendjson(){
+  const btn = document.getElementById('stopBtn');
+  btn.addEventListener("click",() => {
+    $.ajax({
+      type : "POST",
+      url : "/report",
+      dataType : "json",
+      data : JSON.stringify(arrToObject(final_array)),
+      contentType : "application/json;charset=UTF-8",
+      success : function(data, response){
+        console.log("response")
+        $(".title").text("");
+        $(".title").text(data);
+        $(".desc").text("");
+      },
+      error: function(jqXHR, status, error){
+        console.log(status, error);
+      }
     });
   })
-  .catch(function(error) {
-    console.log("Fetch error: " + error);
-  });
 }
-
-var stopBtn = document.getElementById('stopBtn');
-stopBtn.addEventListener('click',sendJSON);
+window.onload = sendjson;
 
 
 /**

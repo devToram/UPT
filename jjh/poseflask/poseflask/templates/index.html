@@ -29,7 +29,7 @@
                 <a class="nav-link" href="https://github.com/JooEHyeon/UPT">
                   <img
                     class="icon"
-                    src="../static/images/github-logo.png"
+                    src="{{url_for('static',filename='images/github-logo.png')}}"
                     alt="UPT git hub"
                   />
                 </a>
@@ -41,7 +41,7 @@
                 >
                   <img
                     class="icon"
-                    src="../static/images/meet-icon.png"
+                    src="{{url_for('static',filename='images/meet-icon.png')}}"
                     alt="UPT google meet"
                   />
                 </a>
@@ -57,8 +57,7 @@
         <section class="banner">
           <div class="banner-img">
             <img
-                src="../static/images/img_main_1.jpg"
-                alt="plank pose background image"
+                src="{{url_for('static',filename='../static/images/img_main_1.jpg')}}"
               />
           </div>
           <div class="banner-content">

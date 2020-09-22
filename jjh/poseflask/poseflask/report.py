@@ -56,6 +56,8 @@ class Report():
                 else:
                     input_data.loc[j + idx] =key
             idx += 4
+            # input_data = input_data.drop(input_data.index[-1])
+
         return input_data
 
 
@@ -89,6 +91,9 @@ class Report():
     def out_put_x_score(self,input_data_b, model_result_b):                                           #return score_x, avr_1, avr_0
         count = 3
         drop_count = len(model_result_b) - 1
+        input_data_b = input_data_b.iloc[:-1,:]
+        # print(input_data_b)
+        # input_data_b.to_csv("../input_data_b.csv",sep=',')
         for i in range(drop_count):                                                                            
             input_data_b = input_data_b.drop(input_data_b.index[count])                                       # 중간 껴있는 컬럼 삭제
             count = count + 3
@@ -105,21 +110,21 @@ class Report():
                 result_idx_1_.append(i)
             else:
                 result_idx_0_.append(i)
-                                                                                        
+            print(result_idx_1_)    
+            print(result_idx_0_)                   
         result_idx_1_x_ = []
         for i in result_idx_1_:
             result_idx_1_x_.append(i*4)
-                                                                                                            # 1데이터 인덱스
-
 
         result_idx_0_x_ = []
         for i in result_idx_0_:                                                                            # 0데이터 인덱스
             result_idx_0_x_.append(i*4)
         
 
-        input_data_b_x_1_ = input_data_b.loc[result_idx_1_x_]                                                #1,0 데이터
+        input_data_b_x_1_ = input_data_b.loc[result_idx_1_x_]  
         input_data_b_x_0_ = input_data_b.loc[result_idx_0_x_]
-
+        # print(input_data_b_x_1_)
+        # print(input_data_b_x_0_)
         sum_list_0 = []
         for i in self.key:
             sum_ = 0
@@ -149,9 +154,11 @@ class Report():
         document_1 = np.array(avr_1)
         document_2 = np.array(avr_0)
         score_x = 100 - int(euclidean_distance(document_1,document_2))
-        print("나의 동작 평균 점수 :",score_x,"점", " ( 좌 우 )") 
+        x_str_score = []
+        x_str_score.append("나의 동작 평균점수 :" + str(score_x) + "점" + " ( 좌 우 )")
+    
 
-        return score_x, avr_1, avr_0
+        return score_x, avr_1, avr_0, x_str_score
         #===========================================================
     def out_put_y_score(self,input_data_b, model_result_b):                                           #return score_y, avr_1_y, avr_0_y
 
@@ -212,9 +219,10 @@ class Report():
         document_1_y = np.array(avr_1_y)
         document_2_y = np.array(avr_0_y)
         score_y = 100 - int(euclidean_distance(document_1_y,document_2_y))
-        print("나의 동작 평균 점수 :",score_y,"점", " ( 상 하 )")
-        
-        return score_y, avr_1_y, avr_0_y
+        y_str_score = []
+        y_str_score.append("나의 동작 평균 점수 :" + str(score_y) + "점" +  " ( 상 하 )")
+    
+        return score_y, avr_1_y, avr_0_y, y_str_score
 
     def feedback(self,part, feedback_part):
             r_list = []
@@ -228,6 +236,7 @@ class Report():
         score = s[0]
         avr_1 = s[1]
         avr_0 = s[2]
+        score_str_result = s[3]
         
         def comment_x(c,avr_1,avr_0):
 
@@ -335,41 +344,43 @@ class Report():
 
 
         if score > 85:
-            print("전체적인 좌우 중심 밸런스가 좋습니다!\n지금처럼 정확한 동작을 유지하면서 꾸준히 운동해주세요 ")
-            print()
-            return None
+            score_str_result.append("전체적인 좌우 중심 밸런스가 좋습니다!  지금처럼 정확한 동작을 유지하면서 꾸준히 운동해주세요 ")
+            return score_str_result
         elif 70 < score <= 85:
-            print("전체적인 좌우 중심 밸런스가 다소 안좋습니다!")
-            print(comment_x(1,avr_1,avr_0)[0],'위치에 주의해주세요.')
+            score_str_result.append("전체적인 좌우 중심 밸런스가 다소 안좋습니다!")
+            score_str_result.append(str(comment_x(1,avr_1,avr_0)[0]) + '위치에 주의해주세요.')
             # print(comment_x(1,avr_1,avr_0)[1])
-            [print(i) for i in comment_x(1,avr_1,avr_0)[1] ]
+            for i in comment_x(1,avr_1,avr_0)[1]:
+                score_str_result.append(i)
             # print(feedback(comment_x(1,avr_1,avr_0)[0],feedback_part))
-            [print(i) for i in self.feedback(comment_x(1,avr_1,avr_0)[0],self.feedback_part) ]
-            
+            for i in self.feedback(comment_x(1,avr_1,avr_0)[0],self.feedback_part):
+                score_str_result.append(i)
+            return score_str_result
 
-            print()
-            return None
+
         elif 55 < score <= 70:
-            print("전체적인 좌우 중심 밸런스가 안좋습니다!")
-            print(comment_x(2,avr_1,avr_0)[0],'위치에 주의해주세요')
+            score_str_result.append("전체적인 좌우 중심 밸런스가 안좋습니다!")
+            score_str_result.append(str(comment_x(2,avr_1,avr_0)[0]) + '위치에 주의해주세요')
             # print(comment_x(2,avr_1,avr_0)[1])
-            [print(i) for i in comment_x(2,avr_1,avr_0)[1]]
+            for i in comment_x(2,avr_1,avr_0)[1]:
+                score_str_result.append(i)
             # print(feedback(comment_x(2,avr_1,avr_0)[0],feedback_part))
-            [print(i) for i in self.feedback(comment_x(2,avr_1,avr_0)[0],self.feedback_part)]
-            print()
-            return None
+            for i in self.feedback(comment_x(2,avr_1,avr_0)[0],self.feedback_part):
+                score_str_result.append(i)
+            return score_str_result
+
+
         elif 40 < score <= 55:
-            print("전체적인 좌우 중심 밸런스가 매우 안좋습니다!")
-            print(comment_x(3,avr_1,avr_0)[0],'위치에 주의해주세요')
+            score_str_result.append("전체적인 좌우 중심 밸런스가 매우 안좋습니다!")
+            score_str_result.append(str(comment_x(3,avr_1,avr_0)[0]),'위치에 주의해주세요')
             # print(comment_x(3,avr_1,avr_0)[1])
-            [print(i) for i in comment_x(3,avr_1,avr_0)[1]]
-            print(self.feedback(comment_x(3,avr_1,avr_0)[0],self.feedback_part))
-            
-            
-            print()
+            for i in comment_x(3,avr_1,avr_0)[1]:
+                score_str_result.append(i)
+            score_str_result.append(self.feedback(comment_x(3,avr_1,avr_0)[0],self.feedback_part))
+            return score_str_result
         elif score<50:
-            print("다시 배우슈")
-            return None
+            score_str_result.append("다시 배우세요")
+            return score_str_result
 
         # #================Y========================
         #                                                                                                        #    x와 거의 동일    위 아래 코멘트
@@ -377,6 +388,7 @@ class Report():
         score = s[0]
         avr_1_y = s[1]
         avr_0_y = s[2]
+        score_str_result =  s[3]
 
         def comment_y(c,avr_1_y, avr_0_y):
 
@@ -476,35 +488,43 @@ class Report():
 
 
         if score > 85:
-            print("전체적인 상하 중심 밸런스가 좋습니다!\n지금처럼 정확한 동작을 유지하면서 꾸준히 운동해주세요! ")
-            print()
-            return None
+            score_str_result.append("전체적인 상하 중심 밸런스가 좋습니다!  지금처럼 정확한 동작을 유지하면서 꾸준히 운동해주세요! ")
+            
+            return score_str_result
+       
+       
         elif 70 < score <= 85:
-            print("전체적인 상하 중심 밸런스가 다소 안좋습니다!")
-            print(comment_y(1,avr_1_y, avr_0_y)[0],"위치에 주의 해주세요.")
+            score_str_result.append("전체적인 상하 중심 밸런스가 다소 안좋습니다!")
+            score_str_result.append(str(comment_y(1,avr_1_y, avr_0_y)[0]),"위치에 주의 해주세요.")
             # print(comment_y(1,avr_1_y, avr_0_y)[1])
-            [print(i) for i in comment_y(1,avr_1_y, avr_0_y)[1]]
-            print(self.feedback(comment_y(1,avr_1_y,avr_0_y)[0],self.feedback_part))
-            print()
-            return None
+            for i in comment_y(1,avr_1_y, avr_0_y)[1]:
+                score_str_result.append(i)
+            score_str_result.append(self.feedback(comment_y(1,avr_1_y,avr_0_y)[0],self.feedback_part))
+            return score_str_result
+
+
         elif 55 < score <= 70:
-            print("전체적인 상하 중심 밸런스가  안좋습니다!")
-            print(comment_y(2,avr_1_y, avr_0_y)[0],"위치에 주의 해주세요.")
+            score_str_result.append("전체적인 상하 중심 밸런스가  안좋습니다!")
+            score_str_result.append(str(comment_y(2,avr_1_y, avr_0_y)[0]),"위치에 주의 해주세요.")
             # print(comment_y(2,avr_1_y, avr_0_y)[1])
-            [print(i) for i in comment_y(2,avr_1_y, avr_0_y)[1]]
-            print(self.feedback(comment_y(2,avr_1_y,avr_0_y)[0],self.feedback_part))
-            print()
-            return None
+            for i in comment_y(2,avr_1_y, avr_0_y)[1]:
+                score_str_result.append(i)
+            score_str_result.append(self.feedback(comment_y(2,avr_1_y,avr_0_y)[0],self.feedback_part))
+            return score_str_result
+
+
         elif 40 < score <= 55:
-            print("전체적인 상하 중심 밸런스가 매우 안좋습니다!")
-            print(comment_y(3,avr_1_y, avr_0_y)[0],"위치에 주의 해주세요.")
+            score_str_result.append("전체적인 상하 중심 밸런스가 매우 안좋습니다!")
+            score_str_result.append(str(comment_y(3,avr_1_y, avr_0_y)[0]),"위치에 주의 해주세요.")
             # print(comment_y(3,avr_1_y, avr_0_y)[1])
-            [print(i) for i in comment_y(3,avr_1_y, avr_0_y)[1]]
-            print(self.feedback(comment_y(3,avr_1_y,avr_0_y)[0],self.feedback_part))
-            print()
+            for i in comment_y(3,avr_1_y, avr_0_y)[1]:
+                score_str_result.append(i)
+            score_str_result.append(self.feedback(comment_y(3,avr_1_y,avr_0_y)[0],self.feedback_part))
+        
+        
         elif score<50:
-            print("다시 배우슈")
-            return None
+            score_str_result.append("다시 배우세요")
+            return score_str_result
     
 
 

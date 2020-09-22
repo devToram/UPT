@@ -153,9 +153,6 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
   if (counter < 11){
     final_array.push(semi_final_array);
     counter += 1;
-  }else if(counter > 10){
-    final_array.length = 0;
-    counter = 0;
   }
 }
 
@@ -185,8 +182,8 @@ export function sendjson(){
       success : function(data, response){
         console.log("response")
         $(".title").text("");
-        $(".title").text(data);
         $(".desc").text("");
+        $(".title").text(data);
       },
       error: function(jqXHR, status, error){
         console.log(status, error);

@@ -3,6 +3,9 @@ from flask_static_digest import FlaskStaticDigest
 import poseflask.report as report
 import poseflask.model as model
 from flask_cors import CORS
+import numpy as np
+import pandas as pd
+
 
 flask_static_digest = FlaskStaticDigest()
 rep = report.Report()
@@ -34,20 +37,48 @@ def create_app():
         for d in data:
             vlist.append(list(d.values()))
 
-        result = rep.made(vlist)
-        result = rep.made_dataframe(result)
-        
-        # model_result = mol.predict(result)
+        pose_list = []
 
-        rep_x = rep.report_x(rep.out_put_x_score(result,rep.data))
-        rep_y = rep.report_y(rep.out_put_y_score(result,rep.data))
+        for pose in vlist:
+            xpose = []
+            ypose = []
+            for i in range(34):
+                if i % 2:
+                    ypose.append(round(pose[i],3))
+                else:
+                    xpose.append(round(pose[i],3))
+            for i in range(17):
+                xpose[i] -= xpose[0]
+                ypose[i] -= ypose[0]
+            for i in range(17):
+                if xpose[16] == 0 or ypose[16] == 0:
+                    break
+                xpose[i] /= xpose[16]
+                ypose[i] /= ypose[16]
+            resort_array = []
+            for i in range(17):
+                resort_array.append(round(xpose[i],3))
+                resort_array.append(round(ypose[i],3))
+            pose[:34] = resort_array[:]
+            pose_list.append(pose)
+
+        # print(pose_list)
+
+        result = rep.made(pose_list)
+        result_df = rep.made_dataframe(result)
+        result_df2 = rep.made_dataframe(result)
+        # result.to_csv('../result.csv',sep=',')
+        model_result = mol.predict(result_df2)
+        # print(result_df)
+        # print(model_result)
+        rep_x = rep.report_x(rep.out_put_x_score(result_df,model_result))
+        rep_y = rep.report_y(rep.out_put_y_score(result_df,model_result))
         
         # final_result = {
-        #     "rep_x" : rep_x,
+        #     "rep_x" : rep_x,s
         #     "rep_y" : rep_y
         # }
-        final_result = "1"
-        return jsonify(final_result)
+        return jsonify(rep_x)
 
     @app.route('/result/',methods=['POST','GET'])
     @app.route('/result/<string:final_result>/')

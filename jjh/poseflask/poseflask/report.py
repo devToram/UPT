@@ -153,7 +153,7 @@ class Report():
                                                                                                                 #유클리드 거리 
         document_1 = np.array(avr_1)
         document_2 = np.array(avr_0)
-        score_x = 100 - int(euclidean_distance(document_1,document_2))
+        score_x = 100 - float(euclidean_distance(document_1,document_2))
         x_str_score = []
         x_str_score.append("나의 동작 평균점수 :" + str(score_x) + "점" + " ( 좌 우 )")
     
@@ -218,7 +218,7 @@ class Report():
 
         document_1_y = np.array(avr_1_y)
         document_2_y = np.array(avr_0_y)
-        score_y = 100 - int(euclidean_distance(document_1_y,document_2_y))
+        score_y = 100 - float(euclidean_distance(document_1_y,document_2_y))
         y_str_score = []
         y_str_score.append("나의 동작 평균 점수 :" + str(score_y) + "점" +  " ( 상 하 )")
     

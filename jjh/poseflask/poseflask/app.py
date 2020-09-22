@@ -70,9 +70,13 @@ def create_app():
         # result.to_csv('../result.csv',sep=',')
         model_result = mol.predict(result_df2)
         # print(result_df)
-        # print(model_result)
-        rep_x = rep.report_x(rep.out_put_x_score(result_df,model_result))
-        rep_y = rep.report_y(rep.out_put_y_score(result_df,model_result))
+        print(model_result)
+        print("@"*15)
+        if model_result[-1] == 0:
+            rep_x = "잘못 촬영되었습니다! 다시 시도해주세요!"
+        else:
+            rep_x = rep.report_x(rep.out_put_x_score(result_df,model_result))
+            rep_y = rep.report_y(rep.out_put_y_score(result_df,model_result))
         
         # final_result = {
         #     "rep_x" : rep_x,s

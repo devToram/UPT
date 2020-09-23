@@ -14,17 +14,17 @@
  * limitations under the License.
  * =============================================================================
  */
-import * as posenet from '@tensorflow-models/posenet';
-import * as tf from '@tensorflow/tfjs';
+import * as posenet from "@tensorflow-models/posenet";
+import * as tf from "@tensorflow/tfjs";
 
-const color = 'aqua';
-const boundingBoxColor = 'red';
+const color = "aqua";
+const boundingBoxColor = "red";
 const lineWidth = 2;
 
-export const tryResNetButtonName = 'tryResNetButton';
-export const tryResNetButtonText = '[New] Try ResNet50';
-const tryResNetButtonTextCss = 'width:100%;text-decoration:underline;';
-const tryResNetButtonBackgroundCss = 'background:#e61d5f;';
+export const tryResNetButtonName = "tryResNetButton";
+export const tryResNetButtonText = "[New] Try ResNet50";
+const tryResNetButtonTextCss = "width:100%;text-decoration:underline;";
+const tryResNetButtonBackgroundCss = "background:#e61d5f;";
 
 function isAndroid() {
   return /Android/i.test(navigator.userAgent);
@@ -38,13 +38,13 @@ export function isMobile() {
   return isAndroid() || isiOS();
 }
 
-function setDatGuiPropertyCss(propertyText, liCssString, spanCssString = '') {
-  var spans = document.getElementsByClassName('property-name');
+function setDatGuiPropertyCss(propertyText, liCssString, spanCssString = "") {
+  var spans = document.getElementsByClassName("property-name");
   for (var i = 0; i < spans.length; i++) {
     var text = spans[i].textContent || spans[i].innerText;
     if (text == propertyText) {
       spans[i].parentNode.parentNode.style = liCssString;
-      if (spanCssString !== '') {
+      if (spanCssString !== "") {
         spans[i].style = spanCssString;
       }
     }
@@ -53,25 +53,30 @@ function setDatGuiPropertyCss(propertyText, liCssString, spanCssString = '') {
 
 export function updateTryResNetButtonDatGuiCss() {
   setDatGuiPropertyCss(
-      tryResNetButtonText, tryResNetButtonBackgroundCss,
-      tryResNetButtonTextCss);
+    tryResNetButtonText,
+    tryResNetButtonBackgroundCss,
+    tryResNetButtonTextCss
+  );
 }
 
 /**
  * Toggles between the loading UI and the main canvas UI.
  */
 export function toggleLoadingUI(
-    showLoadingUI, loadingDivId = 'loading', mainDivId = 'main') {
+  showLoadingUI,
+  loadingDivId = "loading",
+  mainDivId = "main"
+) {
   if (showLoadingUI) {
-    document.getElementById(loadingDivId).style.display = 'block';
-    document.getElementById(mainDivId).style.display = 'none';
+    document.getElementById(loadingDivId).style.display = "block";
+    document.getElementById(mainDivId).style.display = "none";
   } else {
-    document.getElementById(loadingDivId).style.display = 'none';
-    document.getElementById(mainDivId).style.display = 'block';
+    document.getElementById(loadingDivId).style.display = "none";
+    document.getElementById(mainDivId).style.display = "block";
   }
 }
 
-function toTuple({y, x}) {
+function toTuple({ y, x }) {
   return [y, x];
 }
 
@@ -98,13 +103,19 @@ export function drawSegment([ay, ax], [by, bx], color, scale, ctx) {
  * Draws a pose skeleton by looking up all adjacent keypoints/joints
  */
 export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
-  const adjacentKeyPoints =
-      posenet.getAdjacentKeyPoints(keypoints, minConfidence);
+  const adjacentKeyPoints = posenet.getAdjacentKeyPoints(
+    keypoints,
+    minConfidence
+  );
 
   adjacentKeyPoints.forEach((keypoints) => {
     drawSegment(
-        toTuple(keypoints[0].position), toTuple(keypoints[1].position), color,
-        scale, ctx);
+      toTuple(keypoints[0].position),
+      toTuple(keypoints[1].position),
+      color,
+      scale,
+      ctx
+    );
   });
 }
 
@@ -124,21 +135,21 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
   for (let i = 0; i < keypoints.length; i++) {
     const keypoint = keypoints[i];
 
-    if(keypoint.position.x < 0.1){
-      keypoint_array.push(0.0)
-    }else{
+    if (keypoint.position.x < 0.1) {
+      keypoint_array.push(0.0);
+    } else {
       keypoint_array.push(keypoint.position.x);
     }
-    
-    if(keypoint.position.y < 0.1){
-      keypoint_array.push(0.0)
-    }else{
+
+    if (keypoint.position.y < 0.1) {
+      keypoint_array.push(0.0);
+    } else {
       keypoint_array.push(keypoint.position.y);
     }
-    
-    if(keypoint.score < 0.000001){
-      confidence_array.push(0.0)
-    }else{
+
+    if (keypoint.score < 0.000001) {
+      confidence_array.push(0.0);
+    } else {
       confidence_array.push(keypoint.score);
     }
 
@@ -146,23 +157,27 @@ export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
     //   continue;
     // }
 
-    const {y, x} = keypoint.position;
+    const { y, x } = keypoint.position;
     // drawPoint(ctx, y * scale, x * scale, 3, color);
   }
   semi_final_array = keypoint_array.concat(confidence_array);
-  if (counter < 11){
+  if (counter < 11) {
     final_array.push(semi_final_array);
     counter += 1;
   }
 }
 
-export function arrToObject(arr){
+export function arrToObject(arr) {
   var keys = arr[0];
   var newArr = arr.slice(1, arr.length);
-  var formatted = [], data = newArr, cols = keys, l = cols.length;
-  for (var i=0; i<data.length;i++){
-    var d = data[i], o = {};
-    for (var j=0; j<l; j++){
+  var formatted = [],
+    data = newArr,
+    cols = keys,
+    l = cols.length;
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i],
+      o = {};
+    for (var j = 0; j < l; j++) {
       o[cols[j]] = d[j];
     }
     formatted.push(o);
@@ -170,29 +185,28 @@ export function arrToObject(arr){
   return formatted;
 }
 
-export function sendjson(){
-  const btn = document.getElementById('stopBtn');
-  btn.addEventListener("click",() => {
+export function sendjson() {
+  const btn = document.getElementById("stopBtn");
+  btn.addEventListener("click", () => {
     $.ajax({
-      type : "POST",
-      url : "/report",
-      dataType : "json",
-      data : JSON.stringify(arrToObject(final_array)),
-      contentType : "application/json;charset=UTF-8",
-      success : function(data, response){
-        console.log("response")
+      type: "POST",
+      url: "/report",
+      dataType: "json",
+      data: JSON.stringify(arrToObject(final_array)),
+      contentType: "application/json;charset=UTF-8",
+      success: function (data, response) {
+        console.log("response");
         $(".title").text("");
         $(".desc").text("");
-        $(".title").text(data);
+        $(".desc").text(data);
       },
-      error: function(jqXHR, status, error){
+      error: function (jqXHR, status, error) {
         console.log(status, error);
-      }
+      },
     });
-  })
+  });
 }
 window.onload = sendjson;
-
 
 /**
  * Draw the bounding box of a pose. For example, for a whole person standing
@@ -203,8 +217,11 @@ export function drawBoundingBox(keypoints, ctx) {
   const boundingBox = posenet.getBoundingBox(keypoints);
 
   ctx.rect(
-      boundingBox.minX, boundingBox.minY, boundingBox.maxX - boundingBox.minX,
-      boundingBox.maxY - boundingBox.minY);
+    boundingBox.minX,
+    boundingBox.minY,
+    boundingBox.maxX - boundingBox.minX,
+    boundingBox.maxY - boundingBox.minY
+  );
 
   ctx.strokeStyle = boundingBoxColor;
   ctx.stroke();
@@ -238,7 +255,7 @@ export async function renderToCanvas(a, ctx) {
 export function renderImageToCanvas(image, size, canvas) {
   canvas.width = size[0];
   canvas.height = size[1];
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   ctx.drawImage(image, 0, 0);
 }
@@ -249,9 +266,9 @@ export function renderImageToCanvas(image, size, canvas) {
  * https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
  */
 export function drawHeatMapValues(heatMapValues, outputStride, canvas) {
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   const radius = 5;
-  const scaledValues = heatMapValues.mul(tf.scalar(outputStride, 'int32'));
+  const scaledValues = heatMapValues.mul(tf.scalar(outputStride, "int32"));
 
   drawPoints(ctx, scaledValues, radius, color);
 }
@@ -282,9 +299,17 @@ function drawPoints(ctx, points, radius, color) {
  * https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
  */
 export function drawOffsetVectors(
-    heatMapValues, offsets, outputStride, scale = 1, ctx) {
-  const offsetPoints =
-      posenet.singlePose.getOffsetPoints(heatMapValues, outputStride, offsets);
+  heatMapValues,
+  offsets,
+  outputStride,
+  scale = 1,
+  ctx
+) {
+  const offsetPoints = posenet.singlePose.getOffsetPoints(
+    heatMapValues,
+    outputStride,
+    offsets
+  );
 
   const heatmapData = heatMapValues.buffer().values;
   const offsetPointsData = offsetPoints.buffer().values;
@@ -296,7 +321,11 @@ export function drawOffsetVectors(
     const offsetPointX = offsetPointsData[i + 1];
 
     drawSegment(
-        [heatmapY, heatmapX], [offsetPointY, offsetPointX], color, scale, ctx);
+      [heatmapY, heatmapX],
+      [offsetPointY, offsetPointX],
+      color,
+      scale,
+      ctx
+    );
   }
 }
-

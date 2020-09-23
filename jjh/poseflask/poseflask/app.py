@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, make_response
 from flask_static_digest import FlaskStaticDigest
-import poseflask.report as report
-import poseflask.model as model
 from flask_cors import CORS
 import numpy as np
-import pandas as pd
-
+import poseflask.model as model
+import poseflask.report as report
 
 flask_static_digest = FlaskStaticDigest()
 rep = report.Report()
@@ -68,15 +66,15 @@ def create_app():
         result_df = rep.made_dataframe(result)
         result_df2 = rep.made_dataframe(result)
         # result.to_csv('../result.csv',sep=',')
-        model_result = mol.predict(result_df2)
+        # model_result = mol.predict(result_df2)
         # print(result_df)
         print(model_result)
         print("@"*15)
         if model_result[-1] == 0:
             rep_x = "잘못 촬영되었습니다! 다시 시도해주세요!"
         else:
-            rep_x = rep.report_x(rep.out_put_x_score(result_df,model_result))
-            rep_y = rep.report_y(rep.out_put_y_score(result_df,model_result))
+            rep_x = rep.report_x(rep.out_put_x_score(result_df,[0,0,0,1,0,0,0,0,1,0]))
+            # rep_y = rep.report_y(rep.out_put_y_score(result_df,model_result))
         
         # final_result = {
         #     "rep_x" : rep_x,s
